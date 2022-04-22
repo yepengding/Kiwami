@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KripkeStructure {
 
+    @Getter
     private final Set<State> states;
 
     private final Set<State> initStates;
@@ -35,6 +36,18 @@ public class KripkeStructure {
     }
 
     /**
+     * Get a state by its definition
+     *
+     * @param definition state definition
+     * @return either a state or null
+     */
+    public Optional<State> getStateByDefinition(String definition) {
+        return this.states.stream()
+                .filter(s -> s.definition().equals(definition))
+                .findAny();
+    }
+
+    /**
      * Get Atomic Proposition Set of this Kripke Structure
      *
      * @return Atomic Proposition Set
@@ -43,6 +56,16 @@ public class KripkeStructure {
         return this.labeling.values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Get an atomic proposition set of a given state by the labeling function
+     *
+     * @param state state
+     * @return atomic proposition set where all elements hold in the given state
+     */
+    public Set<AtomicProposition> getAtomicPropositionSetOfState(State state) {
+        return this.labeling.get(state);
     }
 
 }

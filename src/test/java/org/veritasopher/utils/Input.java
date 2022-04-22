@@ -1,6 +1,5 @@
-package org.veritasopher.unit;
+package org.veritasopher.utils;
 
-import org.junit.Test;
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
@@ -9,10 +8,9 @@ import org.veritasopher.structure.KripkeStructure;
 import java.util.Map;
 import java.util.Set;
 
-public class StructureTest {
+public class Input {
 
-    @Test
-    public void testKripkeStructure() {
+    public static KripkeStructure getKripkeStructure0() {
         // s1 (p1) -> s2 (p2) -> s3 (p3) -> s4 (p4) -> s5 (p5) -> s1 (p3)
 
         State s1 = new State("s1");
@@ -33,15 +31,12 @@ public class StructureTest {
         AtomicProposition p4 = new AtomicProposition("p4");
         AtomicProposition p5 = new AtomicProposition("p5");
 
-
-        KripkeStructure kripkeStructure = new KripkeStructure(
+        return new KripkeStructure(
                 Set.of(s1, s2, s3, s4, s5),
                 Set.of(s1),
                 Set.of(t1, t2, t3, t4, t5),
                 Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5))
         );
-
-        System.out.println(kripkeStructure.getAtomicPropositionSet());
     }
 
 }
