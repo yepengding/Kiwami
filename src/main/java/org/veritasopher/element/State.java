@@ -1,9 +1,13 @@
 package org.veritasopher.element;
 
-import java.util.Set;
-
+/**
+ * State
+ *
+ * @param definition state definition
+ * @author Yepeng Ding
+ */
 public record State(
-        Set<AtomicProposition> labels
+        String definition
 ) {
 
 }
