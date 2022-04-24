@@ -10,8 +10,8 @@ import java.util.Optional;
 /**
  * Encoded Kripke Structure
  *
- * @param apMap    Map<atomic proposition, index>
- * @param stateMap Map<state, encoded array>
+ * @param apMap    Map: atomic proposition -> index
+ * @param stateMap Map: state -> encoded array
  * @author Yepeng Ding
  */
 public record EncodedKripkeStructure(

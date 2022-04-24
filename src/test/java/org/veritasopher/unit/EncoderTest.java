@@ -5,13 +5,16 @@ import org.veritasopher.element.State;
 import org.veritasopher.encoder.NaiveEncoder;
 import org.veritasopher.structure.EncodedKripkeStructure;
 import org.veritasopher.structure.KripkeStructure;
-import org.veritasopher.utils.Input;
+import org.veritasopher.utils.Sample;
 
+/**
+ * Encoder Test
+ */
 public class EncoderTest {
 
     @Test
     public void testNaiveEncoder() {
-        KripkeStructure k0 = Input.getKripkeStructure0();
+        KripkeStructure k0 = Sample.getKripkeStructure0();
 
         NaiveEncoder naiveEncoder = new NaiveEncoder(k0);
         EncodedKripkeStructure eK0 = naiveEncoder.encode();

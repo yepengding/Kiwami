@@ -8,14 +8,25 @@ import org.veritasopher.structure.KripkeStructure;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Naive Encoder
+ *
+ * @author Yepeng Ding
+ */
 public class NaiveEncoder {
 
     private final KripkeStructure kripkeStructure;
 
-    // Map<atomic proposition, index>
+    /**
+     * Atomic proposition encoding map.
+     * Map: atomic proposition -> index
+     */
     private final Map<AtomicProposition, Integer> apMap;
 
-    // Map<state, encoded array>
+    /**
+     * State encoding map.
+     * Map: state -> encoded state (boolean array)
+     */
     private final Map<State, boolean[]> stateMap;
 
     public NaiveEncoder(KripkeStructure kripkeStructure) {

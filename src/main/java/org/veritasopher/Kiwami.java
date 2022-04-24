@@ -5,7 +5,7 @@ package org.veritasopher;
  *
  * @author Yepeng Ding
  */
-public class App {
+public class Kiwami {
     public static void main(String[] args) {
         System.out.println("Hello Kiwami!");
     }

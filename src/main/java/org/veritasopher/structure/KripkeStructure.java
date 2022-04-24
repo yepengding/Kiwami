@@ -20,12 +20,16 @@ public class KripkeStructure {
     @Getter
     private final Set<State> states;
 
+    @Getter
     private final Set<State> initStates;
 
+    @Getter
     private final Set<Transition> transitions;
 
-    // Labeling function
-    // Mapping from a state to a set of all atomic propositions holding in the state
+    /**
+     * Labeling function.
+     * Map: state -> a set of all atomic propositions holding in the state
+     */
     private final Map<State, Set<AtomicProposition>> labeling;
 
     public KripkeStructure() {
@@ -36,7 +40,7 @@ public class KripkeStructure {
     }
 
     /**
-     * Get a state by its definition
+     * Get a state by its definition.
      *
      * @param definition state definition
      * @return either a state or null
@@ -48,7 +52,7 @@ public class KripkeStructure {
     }
 
     /**
-     * Get Atomic Proposition Set of this Kripke Structure
+     * Get Atomic Proposition Set of this Kripke Structure.
      *
      * @return Atomic Proposition Set
      */
@@ -59,7 +63,7 @@ public class KripkeStructure {
     }
 
     /**
-     * Get an atomic proposition set of a given state by the labeling function
+     * Get an atomic proposition set of a given state by the labeling function.
      *
      * @param state state
      * @return atomic proposition set where all elements hold in the given state
