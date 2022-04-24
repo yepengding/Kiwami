@@ -2,12 +2,14 @@ package org.veritasopher.encoder;
 
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
+import org.veritasopher.exception.Assert;
 import org.veritasopher.exception.SystemException;
 import org.veritasopher.structure.EncodedKripkeStructure;
 import org.veritasopher.structure.KripkeStructure;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Naive Encoder
@@ -75,9 +77,30 @@ public class NaiveEncoder {
      * Check the legacy of a Kripke structure
      */
     private void checkLegacy() {
-        if (this.kripkeStructure.getInitStates().size() == 0) {
-            throw new SystemException("Kripke structure does not have initial states.");
-        }
+        // Initial state set is not empty
+        Assert.isTrue(kripkeStructure.getInitStates().size() > 0,
+                new SystemException("The initial state set is empty."));
+
+        // State set is not empty
+        Set<State> stateSet = kripkeStructure.getStates();
+        Assert.isTrue(stateSet.size() > 0,
+                new SystemException("The state set is empty."));
+
+        // Initial states are in the state set
+        kripkeStructure.getInitStates()
+                .forEach(s ->
+                        Assert.isTrue(stateSet.contains(s),
+                                new SystemException("Initial state (%s) is not defined in the state set.".formatted(s.definition())))
+                );
+
+        // Transition states are in the state set
+        kripkeStructure.getTransitions()
+                .forEach(t -> {
+                    Assert.isTrue(stateSet.contains(t.src()),
+                            new SystemException("State (%s) is not defined in the state set.".formatted(t.src().definition())));
+                    Assert.isTrue(stateSet.contains(t.dst()),
+                            new SystemException("State (%s) is not defined in the state set.".formatted(t.dst().definition())));
+                });
     }
 
 }

@@ -5,10 +5,10 @@ package org.veritasopher.exception;
  *
  * @author Yepeng Ding
  */
-public class SystemException extends RuntimeException {
+public class SystemException extends BaseException {
 
     public SystemException(String message) {
         super(message);
-        System.err.println(this.getMessage());
     }
+
 }

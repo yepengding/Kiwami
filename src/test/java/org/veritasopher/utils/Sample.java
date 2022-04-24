@@ -13,21 +13,25 @@ import java.util.Set;
  */
 public class Sample {
 
+    /**
+     * Mutual Exclusion Structure.
+     * s0 () <-> s1 (critical0)
+     * s0 () <-> s2 (critical1)
+     * s2 (critical1) -> s3 (critical0, critical1)
+     *
+     * @return mutual exclusion structure
+     */
     public static KripkeStructure getMutualExclusionStructure() {
-        // s0 () <-> s1 (critical0)
-        // s0 () <-> s2 (critical1)
-        // s2 (critical1) -> s3 (critical0, critical1)
-
         State s0 = new State("s0");
         State s1 = new State("s1");
         State s2 = new State("s2");
         State s3 = new State("s3");
 
-        Transition t1 = new Transition(s0, s1);
-        Transition t2 = new Transition(s1, s0);
-        Transition t3 = new Transition(s0, s2);
-        Transition t4 = new Transition(s2, s0);
-        Transition t5 = new Transition(s2, s3);
+        Transition t0 = new Transition(s0, s1);
+        Transition t1 = new Transition(s1, s0);
+        Transition t2 = new Transition(s0, s2);
+        Transition t3 = new Transition(s2, s0);
+        Transition t4 = new Transition(s2, s3);
 
         AtomicProposition critical0 = new AtomicProposition("critical0");
         AtomicProposition critical1 = new AtomicProposition("critical1");
@@ -35,14 +39,18 @@ public class Sample {
         return new KripkeStructure(
                 Set.of(s0, s1, s2, s3),
                 Set.of(s0),
-                Set.of(t1, t2, t3, t4, t5),
+                Set.of(t0, t1, t2, t3, t4),
                 Map.of(s0, Set.of(), s1, Set.of(critical0), s2, Set.of(critical1), s3, Set.of(critical0, critical1))
         );
     }
 
+    /**
+     * Structure #0.
+     * s1 (p1) -> s2 (p2) -> s3 (p3) -> s4 (p4) -> s5 (p5) -> s1 (p3)
+     *
+     * @return structure #0
+     */
     public static KripkeStructure getKripkeStructure0() {
-        // s1 (p1) -> s2 (p2) -> s3 (p3) -> s4 (p4) -> s5 (p5) -> s1 (p3)
-
         State s1 = new State("s1");
         State s2 = new State("s2");
         State s3 = new State("s3");
@@ -69,25 +77,50 @@ public class Sample {
         );
     }
 
-    public static KripkeStructure getFaultyStructure() {
-        // No init state
+    /**
+     * Faulty structure #0.
+     * Initial state set is empty
+     *
+     * @return faulty structure #0
+     */
+    public static KripkeStructure getFaultyStructure0() {
 
+        State s0 = new State("s0");
         State s1 = new State("s1");
-        State s2 = new State("s2");
-        State s3 = new State("s3");
 
-        Transition t1 = new Transition(s1, s2);
-        Transition t2 = new Transition(s2, s3);
-
-        AtomicProposition p1 = new AtomicProposition("p1");
-        AtomicProposition p2 = new AtomicProposition("p2");
-        AtomicProposition p3 = new AtomicProposition("p3");
+        Transition t0 = new Transition(s0, s1);
 
         return new KripkeStructure(
-                Set.of(s1, s2, s3),
+                Set.of(s0, s1),
                 Set.of(),
-                Set.of(t1, t2),
-                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3))
+                Set.of(t0),
+                Map.of(s0, Set.of(), s1, Set.of())
+        );
+    }
+
+    /**
+     * Faulty structure #1.
+     * An initial state is not defined in the state set
+     *
+     * @return fault structure #1
+     */
+    public static KripkeStructure getFaultyStructure1() {
+        State s0 = new State("s0");
+        State s1 = new State("s1");
+        State s2 = new State("s2");
+
+        Transition t0 = new Transition(s0, s1);
+        Transition t1 = new Transition(s1, s2);
+
+        AtomicProposition p0 = new AtomicProposition("p0");
+        AtomicProposition p1 = new AtomicProposition("p1");
+        AtomicProposition p2 = new AtomicProposition("p2");
+
+        return new KripkeStructure(
+                Set.of(s1, s2),
+                Set.of(s0),
+                Set.of(t0, t1),
+                Map.of(s0, Set.of(p0), s1, Set.of(p1), s2, Set.of(p2))
         );
     }
 
