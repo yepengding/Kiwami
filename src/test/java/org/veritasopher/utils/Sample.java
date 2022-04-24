@@ -69,4 +69,26 @@ public class Sample {
         );
     }
 
+    public static KripkeStructure getFaultyStructure() {
+        // No init state
+
+        State s1 = new State("s1");
+        State s2 = new State("s2");
+        State s3 = new State("s3");
+
+        Transition t1 = new Transition(s1, s2);
+        Transition t2 = new Transition(s2, s3);
+
+        AtomicProposition p1 = new AtomicProposition("p1");
+        AtomicProposition p2 = new AtomicProposition("p2");
+        AtomicProposition p3 = new AtomicProposition("p3");
+
+        return new KripkeStructure(
+                Set.of(s1, s2, s3),
+                Set.of(),
+                Set.of(t1, t2),
+                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3))
+        );
+    }
+
 }

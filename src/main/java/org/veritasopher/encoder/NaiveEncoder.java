@@ -2,6 +2,7 @@ package org.veritasopher.encoder;
 
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
+import org.veritasopher.exception.SystemException;
 import org.veritasopher.structure.EncodedKripkeStructure;
 import org.veritasopher.structure.KripkeStructure;
 
@@ -39,6 +40,7 @@ public class NaiveEncoder {
      * Encode the kripke structure in the constructor
      */
     public EncodedKripkeStructure encode() {
+        checkLegacy();
         encodeAtomicProposition();
         encodeState();
         return new EncodedKripkeStructure(this.apMap, this.stateMap);
@@ -66,6 +68,15 @@ public class NaiveEncoder {
                     .map(this.apMap::get)
                     .forEach(i -> encodedState[i] = true);
             this.stateMap.put(state, encodedState);
+        }
+    }
+
+    /**
+     * Check the legacy of a Kripke structure
+     */
+    private void checkLegacy() {
+        if (this.kripkeStructure.getInitStates().size() == 0) {
+            throw new SystemException("Kripke structure does not have initial states.");
         }
     }
 
