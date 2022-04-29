@@ -1,7 +1,6 @@
 package org.veritasopher.unit;
 
 import org.junit.Test;
-import org.veritasopher.encoder.NaiveEncoder;
 import org.veritasopher.exception.SystemException;
 import org.veritasopher.structure.KripkeStructure;
 import org.veritasopher.utils.Sample;
@@ -18,7 +17,7 @@ public class ExceptionTest {
     public void testFaultyStructure0() {
         KripkeStructure structure = Sample.getFaultyStructure0();
 
-        SystemException exception = assertThrows(SystemException.class, () -> new NaiveEncoder(structure));
+        SystemException exception = assertThrows(SystemException.class, structure::checkLegacy);
         assertEquals("The initial state set is empty.", exception.getMessage());
     }
 
@@ -26,7 +25,7 @@ public class ExceptionTest {
     public void testFaultyStructure1() {
         KripkeStructure structure = Sample.getFaultyStructure1();
 
-        SystemException exception = assertThrows(SystemException.class, () -> new NaiveEncoder(structure));
+        SystemException exception = assertThrows(SystemException.class, structure::checkLegacy);
         assertEquals("Initial state (s0) is not defined in the state set.", exception.getMessage());
     }
 

@@ -14,8 +14,20 @@ import static org.junit.Assert.assertTrue;
 public class EncoderTest {
 
     @Test
+    public void testMutualExclusion() {
+        KripkeStructure mutex = Sample.getMutualExclusionStructure();
+        mutex.checkLegacy();
+
+        NaiveEncoder naiveEncoder = new NaiveEncoder(mutex);
+
+        String smtProgram = naiveEncoder.generateSMT();
+        System.out.println(smtProgram);
+    }
+
+    @Test
     public void testNaiveEncoder() {
         KripkeStructure k0 = Sample.getKripkeStructure0();
+        k0.checkLegacy();
 
         NaiveEncoder naiveEncoder = new NaiveEncoder(k0);
         naiveEncoder.printStateMap();

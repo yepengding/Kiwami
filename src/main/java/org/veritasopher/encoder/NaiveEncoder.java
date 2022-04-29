@@ -2,11 +2,15 @@ package org.veritasopher.encoder;
 
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
+import org.veritasopher.element.Transition;
 import org.veritasopher.exception.Assert;
 import org.veritasopher.exception.SystemException;
 import org.veritasopher.structure.KripkeStructure;
+import org.veritasopher.util.FileUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Naive Encoder
@@ -34,17 +38,76 @@ public class NaiveEncoder {
         this.stateMap = new HashMap<>();
         this.kripkeStructure = kripkeStructure;
 
-        checkLegacy();
         encodeAtomicProposition();
         encodeState();
     }
 
     /**
-     * Encode the kripke structure in the constructor
+     * Encode the Kripke structure in the constructor
      */
-    public String encodeAsString() {
+    public String generateSMT() {
+        String template = FileUtil.readFromFileInResource("templates/SMTTemplate");
 
-        return null;
+        String transitionConstraints = generateTransitionConstraints();
+
+        String initConstraints = generateInitStateAssertion();
+
+        return initConstraints;
+    }
+
+    /**
+     * Generate a transition constraints
+     *
+     * @return transition constraints
+     */
+    private String generateTransitionConstraints() {
+        Set<Transition> transitions = this.kripkeStructure.getTransitions();
+        if (transitions.size() > 1) {
+            return """
+                    (or
+                    %s
+                    )
+                    """.formatted(
+                    transitions.stream()
+                            .map(t -> "(and %s %s)".formatted(
+                                            this.stateMap.get(t.src()).constraint("x"),
+                                            this.stateMap.get(t.dst()).constraint("y")
+                                    )
+                            ).collect(Collectors.joining(System.lineSeparator()))
+            );
+        } else if (transitions.size() == 1) {
+            Transition t = transitions.iterator().next();
+            return "(and %s %s)".formatted(
+                    this.stateMap.get(t.src()).constraint("x"),
+                    this.stateMap.get(t.dst()).constraint("y")
+            );
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Generate initial state assertion
+     *
+     * @return initial state assertion
+     */
+    private String generateInitStateAssertion() {
+        if (this.kripkeStructure.getInitStates().size() == 1) {
+            return """
+                    (assert (and %s))
+                    """.formatted(
+                    this.stateMap.get(this.kripkeStructure.getInitStates().iterator().next())
+                            .constraint("0"));
+        }
+
+        return """
+                (assert (or
+                %s
+                ))
+                """.formatted(
+                this.kripkeStructure.getInitStates().stream()
+                        .map(s -> "(and %s)".formatted(this.stateMap.get(s).constraint("0")))
+                        .collect(Collectors.joining(System.lineSeparator())));
     }
 
     /**
@@ -62,45 +125,17 @@ public class NaiveEncoder {
      * Encode state map: state -> encoded state (boolean array)
      */
     private void encodeState() {
-        int index = 0;
         for (State state :
                 this.kripkeStructure.getStates()) {
             boolean[] code = new boolean[this.apMap.size()];
             this.kripkeStructure.getAtomicPropositionSetOfState(state).stream()
                     .map(this.apMap::get)
                     .forEach(i -> code[i] = true);
-            this.stateMap.put(state, new EncodedState(index, code));
+            String unindexedConstraint = IntStream.range(0, code.length)
+                    .mapToObj(i -> (code[i] ? "(s %s %d)" : "(not (s %s %d))").formatted("%s", i))
+                    .collect(Collectors.joining(" "));
+            this.stateMap.put(state, new EncodedState(code, unindexedConstraint));
         }
-    }
-
-    /**
-     * Check the legacy of a Kripke structure.
-     */
-    private void checkLegacy() {
-        // Initial state set is not empty
-        Assert.isTrue(this.kripkeStructure.getInitStates().size() > 0,
-                new SystemException("The initial state set is empty."));
-
-        // State set is not empty
-        Set<State> stateSet = this.kripkeStructure.getStates();
-        Assert.isTrue(stateSet.size() > 0,
-                new SystemException("The state set is empty."));
-
-        // Initial states are in the state set
-        this.kripkeStructure.getInitStates()
-                .forEach(s ->
-                        Assert.isTrue(stateSet.contains(s),
-                                new SystemException("Initial state (%s) is not defined in the state set.".formatted(s.definition())))
-                );
-
-        // Transition states are in the state set
-        this.kripkeStructure.getTransitions()
-                .forEach(t -> {
-                    Assert.isTrue(stateSet.contains(t.src()),
-                            new SystemException("State (%s) is not defined in the state set.".formatted(t.src().definition())));
-                    Assert.isTrue(stateSet.contains(t.dst()),
-                            new SystemException("State (%s) is not defined in the state set.".formatted(t.dst().definition())));
-                });
     }
 
     /**
@@ -127,13 +162,19 @@ public class NaiveEncoder {
     /**
      * Encoded State
      *
-     * @param index state index
-     * @param code  state code
+     * @param code                state code
+     * @param unindexedConstraint unindexed state constraint in SMT form
      */
     public record EncodedState(
-            int index,
-            boolean[] code
+            boolean[] code,
+            String unindexedConstraint
     ) {
+
+        public String constraint(String index) {
+            String[] indices = new String[this.code.length];
+            Arrays.fill(indices, index);
+            return this.unindexedConstraint().formatted((Object[]) indices);
+        }
     }
 
 }

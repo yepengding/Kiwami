@@ -1,0 +1,12 @@
+(declare-fun s (Int Int) Bool)
+
+(define-fun t ((x Int) (y Int)) Bool
+%s
+)
+
+%s
+
+%s
+
+(check-sat)
+%s
