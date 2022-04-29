@@ -18,17 +18,15 @@ public class ExceptionTest {
     public void testFaultyStructure0() {
         KripkeStructure structure = Sample.getFaultyStructure0();
 
-        NaiveEncoder naiveEncoder = new NaiveEncoder();
-        SystemException exception = assertThrows(SystemException.class, () -> naiveEncoder.encode(structure));
+        SystemException exception = assertThrows(SystemException.class, () -> new NaiveEncoder(structure));
         assertEquals("The initial state set is empty.", exception.getMessage());
     }
 
     @Test
     public void testFaultyStructure1() {
         KripkeStructure structure = Sample.getFaultyStructure1();
-        NaiveEncoder naiveEncoder = new NaiveEncoder();
 
-        SystemException exception = assertThrows(SystemException.class, () -> naiveEncoder.encode(structure));
+        SystemException exception = assertThrows(SystemException.class, () -> new NaiveEncoder(structure));
         assertEquals("Initial state (s0) is not defined in the state set.", exception.getMessage());
     }
 
