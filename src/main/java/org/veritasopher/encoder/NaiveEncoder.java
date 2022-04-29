@@ -18,8 +18,6 @@ import java.util.Set;
  */
 public class NaiveEncoder {
 
-    private final KripkeStructure kripkeStructure;
-
     /**
      * Atomic proposition encoding map.
      * Map: atomic proposition -> index
@@ -32,29 +30,28 @@ public class NaiveEncoder {
      */
     private final Map<State, boolean[]> stateMap;
 
-    public NaiveEncoder(KripkeStructure kripkeStructure) {
+    public NaiveEncoder() {
         this.apMap = new HashMap<>();
         this.stateMap = new HashMap<>();
-        this.kripkeStructure = kripkeStructure;
     }
 
     /**
      * Encode the kripke structure in the constructor
      */
-    public EncodedKripkeStructure encode() {
-        checkLegacy();
-        encodeAtomicProposition();
-        encodeState();
+    public EncodedKripkeStructure encode(KripkeStructure kripkeStructure) {
+        checkLegacy(kripkeStructure);
+        encodeAtomicProposition(kripkeStructure);
+        encodeState(kripkeStructure);
         return new EncodedKripkeStructure(this.apMap, this.stateMap);
     }
 
     /**
      * Encode atomic proposition: atomic proposition -> index
      */
-    private void encodeAtomicProposition() {
+    private void encodeAtomicProposition(KripkeStructure kripkeStructure) {
         int index = 0;
         for (AtomicProposition ap :
-                this.kripkeStructure.getAtomicPropositionSet()) {
+                kripkeStructure.getAtomicPropositionSet()) {
             this.apMap.put(ap, index++);
         }
     }
@@ -62,11 +59,11 @@ public class NaiveEncoder {
     /**
      * Encode state map: state -> encoded state (boolean array)
      */
-    private void encodeState() {
+    private void encodeState(KripkeStructure kripkeStructure) {
         for (State state :
-                this.kripkeStructure.getStates()) {
+                kripkeStructure.getStates()) {
             boolean[] encodedState = new boolean[this.apMap.size()];
-            this.kripkeStructure.getAtomicPropositionSetOfState(state).stream()
+            kripkeStructure.getAtomicPropositionSetOfState(state).stream()
                     .map(this.apMap::get)
                     .forEach(i -> encodedState[i] = true);
             this.stateMap.put(state, encodedState);
@@ -76,7 +73,7 @@ public class NaiveEncoder {
     /**
      * Check the legacy of a Kripke structure.
      */
-    private void checkLegacy() {
+    private void checkLegacy(KripkeStructure kripkeStructure) {
         // Initial state set is not empty
         Assert.isTrue(kripkeStructure.getInitStates().size() > 0,
                 new SystemException("The initial state set is empty."));
