@@ -21,7 +21,8 @@ public class FormulaTest {
         Formula notSimultaneous = Or(notCritical0, notCritical1);
         Formula alwaysNotSimultaneous = Globally(notSimultaneous);
         System.out.println(alwaysNotSimultaneous);
-        assert "□((¬(critical0)) ∨ (¬(critical1)))".equals(alwaysNotSimultaneous.toString());
+        assert "□((¬(critical0)) ∨ (¬(critical1)))"
+                .equals(alwaysNotSimultaneous.toString());
     }
 
     @Test
@@ -35,7 +36,8 @@ public class FormulaTest {
                 Imply(infinitelyOftenWait1, infinitelyOftenCritical1)
         );
         System.out.println(starvationFreedom);
-        assert "((□(◇(wait0))) → (□(◇(critical0)))) ∧ ((□(◇(wait1))) → (□(◇(critical1))))".equals(starvationFreedom.toString());
+        assert "((□(◇(wait0))) → (□(◇(critical0)))) ∧ ((□(◇(wait1))) → (□(◇(critical1))))"
+                .equals(starvationFreedom.toString());
     }
 
 }

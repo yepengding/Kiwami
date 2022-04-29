@@ -74,7 +74,7 @@ public class NaiveEncoder {
     }
 
     /**
-     * Check the legacy of a Kripke structure
+     * Check the legacy of a Kripke structure.
      */
     private void checkLegacy() {
         // Initial state set is not empty

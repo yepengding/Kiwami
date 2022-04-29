@@ -52,6 +52,11 @@ public record Formula(
         return new Formula(GLOBALLY, null, right, null);
     }
 
+    /**
+     * Transform to a pretty string.
+     *
+     * @return pretty string
+     */
     @Override
     public String toString() {
         switch (this.type) {
