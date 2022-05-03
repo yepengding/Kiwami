@@ -6,6 +6,7 @@ A generic bounded model checker.
 
 - [x] Encode Kripke structure
 - [x] Structure checking
+- [x] Termination / Maximal step calculation
 - [ ] Structure minimization
 - [ ] Generate SMT-LIB programs
 - [ ] LTL model checking

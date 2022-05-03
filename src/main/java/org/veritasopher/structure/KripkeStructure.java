@@ -28,6 +28,8 @@ public class KripkeStructure {
     @Getter
     private final Set<Transition> transitions;
 
+    private boolean isChecked;
+
     /**
      * Labeling function.
      * Map: state -> a set of all atomic propositions holding in the state
@@ -39,6 +41,7 @@ public class KripkeStructure {
         this.initStates = new HashSet<>();
         this.transitions = new HashSet<>();
         this.labeling = new HashMap<>();
+        this.isChecked = false;
     }
 
 
@@ -49,6 +52,11 @@ public class KripkeStructure {
      * @return maximal step if exists. Otherwise, null.
      */
     public Optional<Integer> calculateMaximalStep() {
+        // Check legacy
+        if (!this.isChecked) {
+            this.checkLegacy();
+        }
+
         int maxStep = 0;
 
         for (State i :
@@ -81,6 +89,11 @@ public class KripkeStructure {
      * @return true if terminates
      */
     public boolean isTermination() {
+        // Check legacy
+        if (!this.isChecked) {
+            this.checkLegacy();
+        }
+
         Optional<Integer> maxStep = this.calculateMaximalStep();
 
         // If the maximal step exists, then the structure terminates.
@@ -153,6 +166,8 @@ public class KripkeStructure {
                     Assert.isTrue(stateSet.contains(t.dst()),
                             new SystemException("State (%s) is not defined in the state set.".formatted(t.dst().definition())));
                 });
+
+        this.isChecked = true;
         return true;
     }
 
