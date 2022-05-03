@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Kripke Structure
+ * Finite Kripke Structure
  *
  * @author Yepeng Ding
  */
@@ -41,10 +41,94 @@ public class KripkeStructure {
         this.labeling = new HashMap<>();
     }
 
+
     /**
-     * Check the legacy of a Kripke structure.
+     * Calculate the maximal step.
+     * If the structure terminates, then the maximal step (step boundary) exists.
+     *
+     * @return maximal step if exists. Otherwise, null.
      */
-    public void checkLegacy() {
+    public Optional<Integer> calculateMaximalStep() {
+        int maxStep = 0;
+
+        for (State i :
+                this.initStates) {
+            Set<State> visitedStates = new HashSet<>();
+            Stack<State> trace = new Stack<>();
+            visitedStates.add(i);
+            trace.push(i);
+
+            Optional<Integer> currentMaxStep = findMaxStepByDFS(visitedStates, trace, trace.size());
+
+            if (currentMaxStep.isPresent()) {
+                // Update the global maximal step.
+                maxStep = Math.max(currentMaxStep.get(), maxStep);
+            } else {
+                // If there exists an infinite path from this initial state, then the maximal step does not exist.
+                return Optional.empty();
+            }
+
+        }
+
+        return Optional.of(maxStep);
+    }
+
+    /**
+     * Check whether the structure terminates (has a terminal state).
+     * Check whether there exists the maximal step.
+     * Check whether there is no cycle in the transition set.
+     *
+     * @return true if terminates
+     */
+    public boolean isTermination() {
+        Optional<Integer> maxStep = this.calculateMaximalStep();
+
+        // If the maximal step exists, then the structure terminates.
+        return maxStep.isPresent();
+    }
+
+    /**
+     * Find the maximal step by DFS.
+     *
+     * @param visited        visited state set
+     * @param trace          trace recording the current visiting path
+     * @param currentMaxStep the current maximal step
+     * @return an updated maximal step value of null if an infinite path (a cycle) exists
+     */
+    private Optional<Integer> findMaxStepByDFS(Set<State> visited, Stack<State> trace, int currentMaxStep) {
+        Optional<Integer> maxStep = Optional.of(currentMaxStep);
+
+        // Find adjacent states of the current state.
+        Set<State> adjacent = this.transitions.stream()
+                .filter(t -> t.src().equals(trace.peek()))
+                .map(Transition::dst)
+                .collect(Collectors.toSet());
+
+        for (State s :
+                adjacent) {
+            if (trace.contains(s)) {
+                // If a cycle is detected (i.e., the current state is on the trace), then the maximal step does not exist.
+                maxStep = Optional.empty();
+            } else if (!visited.contains(s)) {
+                visited.add(s);
+                trace.push(s);
+                maxStep = findMaxStepByDFS(visited, trace, Math.max(trace.size(), currentMaxStep));
+            }
+        }
+
+        // Remove the current state from the trace since traces derived from this state have been searched.
+        trace.pop();
+
+        return maxStep;
+    }
+
+
+    /**
+     * Check the legacy.
+     *
+     * @return true if well-structured
+     */
+    public boolean checkLegacy() {
         // Initial state set is not empty
         Assert.isTrue(this.initStates.size() > 0,
                 new SystemException("The initial state set is empty."));
@@ -69,6 +153,7 @@ public class KripkeStructure {
                     Assert.isTrue(stateSet.contains(t.dst()),
                             new SystemException("State (%s) is not defined in the state set.".formatted(t.dst().definition())));
                 });
+        return true;
     }
 
     /**

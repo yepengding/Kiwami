@@ -7,7 +7,7 @@ import org.veritasopher.utils.Sample;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Kripke Structure Test
@@ -23,6 +23,13 @@ public class KripkeStructureTest {
         assertEquals(0, structure.getAtomicPropositionSetOfState(s0).size());
         assertEquals(1, structure.getAtomicPropositionSetOfState(s1).size());
         assertEquals(2, structure.getAtomicPropositionSetOfState(s3).size());
+    }
+
+    @Test
+    public void testTerminationCheck() {
+        assertFalse(Sample.getKripkeStructure0().isTermination());
+        assertTrue(Sample.getKripkeStructure1().isTermination());
+        assertFalse(Sample.getKripkeStructure2().isTermination());
     }
 
     @Test

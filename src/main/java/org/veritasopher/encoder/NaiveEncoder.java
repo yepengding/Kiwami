@@ -38,6 +38,7 @@ public class NaiveEncoder {
         this.stateMap = new HashMap<>();
         this.kripkeStructure = kripkeStructure;
 
+        kripkeStructure.checkLegacy();
         encodeAtomicProposition();
         encodeState();
     }

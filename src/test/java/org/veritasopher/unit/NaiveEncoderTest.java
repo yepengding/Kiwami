@@ -9,9 +9,9 @@ import org.veritasopher.utils.Sample;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Encoder Test
+ * Naive Encoder Test
  */
-public class EncoderTest {
+public class NaiveEncoderTest {
 
     @Test
     public void testMutualExclusion() {
@@ -25,7 +25,7 @@ public class EncoderTest {
     }
 
     @Test
-    public void testNaiveEncoder() {
+    public void testStateEncoding() {
         KripkeStructure k0 = Sample.getKripkeStructure0();
         k0.checkLegacy();
 
