@@ -1,12 +1,18 @@
+; State function: s (state index, atomic proposition index)
 (declare-fun s (Int Int) Bool)
 
+; Transition function: t (source state index, destination state index)
 (define-fun t ((x Int) (y Int)) Bool
+; Transition constraints
 %s
 )
 
+; Init state assertion
 %s
 
+; Transition assertion
 %s
 
 (check-sat)
+; Get values
 %s

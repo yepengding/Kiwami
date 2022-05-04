@@ -20,7 +20,7 @@ public class NaiveEncoderTest {
 
         NaiveEncoder naiveEncoder = new NaiveEncoder(mutex);
 
-        String smtProgram = naiveEncoder.generateSMT();
+        String smtProgram = naiveEncoder.generateSMTWithBound(2);
         System.out.println(smtProgram);
     }
 

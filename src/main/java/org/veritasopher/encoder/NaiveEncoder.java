@@ -3,7 +3,6 @@ package org.veritasopher.encoder;
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
-import org.veritasopher.logic.LTLFormula;
 import org.veritasopher.structure.KripkeStructure;
 import org.veritasopher.util.FileUtil;
 
@@ -48,14 +47,22 @@ public class NaiveEncoder {
         encodeState();
     }
 
-    public String generateSMT() {
+    /**
+     * Generate an SMT-LIB program with bound k for bounded model checking
+     *
+     * @param k bound
+     * @return SMT-LIB program for bounded model checking
+     */
+    public String generateSMTWithBound(int k) {
         String template = FileUtil.readFromFileInResource("templates/SMTTemplate");
 
         String transitionConstraints = generateTransitionConstraints();
 
-        String initConstraints = generateInitStateAssertion();
+        String initStateAssertion = generateInitStateAssertion();
 
-        return initConstraints;
+        String transitionAssertion = generateTransitionAssertions(k);
+
+        return transitionAssertion;
     }
 
     /**
@@ -111,6 +118,19 @@ public class NaiveEncoder {
                 this.kripkeStructure.getInitStates().stream()
                         .map(s -> "(and %s)".formatted(this.stateMap.get(s).constraint("0")))
                         .collect(Collectors.joining(System.lineSeparator())));
+    }
+
+
+    /**
+     * Generate transition assertions
+     *
+     * @param k bound
+     * @return transition assertions
+     */
+    private String generateTransitionAssertions(int k) {
+        return IntStream.range(0, k)
+                .mapToObj(i -> "(assert (t %d %d))".formatted(i, i + 1))
+                .collect(Collectors.joining(System.lineSeparator()));
     }
 
     /**
