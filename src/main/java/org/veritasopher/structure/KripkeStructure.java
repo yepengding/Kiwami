@@ -1,6 +1,5 @@
 package org.veritasopher.structure;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.veritasopher.element.AtomicProposition;
@@ -8,6 +7,7 @@ import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
 import org.veritasopher.exception.Assert;
 import org.veritasopher.exception.SystemException;
+import org.veritasopher.logic.LTLFormula;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,19 +29,25 @@ public class KripkeStructure {
     @Getter
     private final Set<Transition> transitions;
 
-    private boolean isChecked;
-
     /**
      * Labeling function.
      * Map: state -> a set of all atomic propositions holding in the state
      */
     private final Map<State, Set<AtomicProposition>> labeling;
 
+    private final Set<LTLFormula> ltlProperties;
+
+    /**
+     * Whether the structure semantics has been checked
+     */
+    private boolean isChecked;
+
     public KripkeStructure() {
         this.states = new HashSet<>();
         this.initStates = new HashSet<>();
         this.transitions = new HashSet<>();
         this.labeling = new HashMap<>();
+        this.ltlProperties = new HashSet<>();
         this.isChecked = false;
     }
 

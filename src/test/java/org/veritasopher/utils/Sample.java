@@ -3,10 +3,13 @@ package org.veritasopher.utils;
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
+import org.veritasopher.logic.LTLFormula;
 import org.veritasopher.structure.KripkeStructure;
 
 import java.util.Map;
 import java.util.Set;
+
+import static org.veritasopher.logic.LTLFormula.*;
 
 /**
  * Sample Structures as Inputs
@@ -36,11 +39,14 @@ public class Sample {
         AtomicProposition critical0 = new AtomicProposition("critical0");
         AtomicProposition critical1 = new AtomicProposition("critical1");
 
+        LTLFormula alwaysNotSimultaneous = Globally(Or(Not(Prop(critical0)), Not(Prop(critical1))));
+
         return new KripkeStructure(
                 Set.of(s0, s1, s2, s3),
                 Set.of(s0),
                 Set.of(t0, t1, t2, t3, t4),
-                Map.of(s0, Set.of(), s1, Set.of(critical0), s2, Set.of(critical1), s3, Set.of(critical0, critical1))
+                Map.of(s0, Set.of(), s1, Set.of(critical0), s2, Set.of(critical1), s3, Set.of(critical0, critical1)),
+                Set.of(alwaysNotSimultaneous)
         );
     }
 
@@ -69,11 +75,14 @@ public class Sample {
         AtomicProposition p4 = new AtomicProposition("p4");
         AtomicProposition p5 = new AtomicProposition("p5");
 
+        LTLFormula ltl = Globally(Imply(Prop(p2), Finally(Prop(p1))));
+
         return new KripkeStructure(
                 Set.of(s1, s2, s3, s4, s5),
                 Set.of(s1),
                 Set.of(t1, t2, t3, t4, t5),
-                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5))
+                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5)),
+                Set.of(ltl)
         );
     }
 
@@ -104,11 +113,14 @@ public class Sample {
         AtomicProposition p4 = new AtomicProposition("p4");
         AtomicProposition p5 = new AtomicProposition("p5");
 
+        LTLFormula ltl = Globally(Imply(Prop(p2), Finally(Prop(p1))));
+
         return new KripkeStructure(
                 Set.of(s1, s2, s3, s4, s5),
                 Set.of(s1),
                 Set.of(t1, t2, t3, t4, t5),
-                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5))
+                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5)),
+                Set.of(ltl)
         );
     }
 
@@ -141,11 +153,14 @@ public class Sample {
         AtomicProposition p4 = new AtomicProposition("p4");
         AtomicProposition p5 = new AtomicProposition("p5");
 
+        LTLFormula ltl = Globally(Imply(Prop(p2), Finally(Prop(p1))));
+
         return new KripkeStructure(
                 Set.of(s1, s2, s3, s4, s5),
                 Set.of(s1),
                 Set.of(t1, t2, t3, t4, t5, t6),
-                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5))
+                Map.of(s1, Set.of(p1), s2, Set.of(p2), s3, Set.of(p3), s4, Set.of(p4), s5, Set.of(p5)),
+                Set.of(ltl)
         );
     }
 
@@ -166,7 +181,8 @@ public class Sample {
                 Set.of(s0, s1),
                 Set.of(),
                 Set.of(t0),
-                Map.of(s0, Set.of(), s1, Set.of())
+                Map.of(s0, Set.of(), s1, Set.of()),
+                Set.of()
         );
     }
 
@@ -192,7 +208,8 @@ public class Sample {
                 Set.of(s1, s2),
                 Set.of(s0),
                 Set.of(t0, t1),
-                Map.of(s0, Set.of(p0), s1, Set.of(p1), s2, Set.of(p2))
+                Map.of(s0, Set.of(p0), s1, Set.of(p1), s2, Set.of(p2)),
+                Set.of()
         );
     }
 
