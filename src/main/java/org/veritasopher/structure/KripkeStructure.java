@@ -2,6 +2,7 @@ package org.veritasopher.structure;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @author Yepeng Ding
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class KripkeStructure {
 
     @Getter

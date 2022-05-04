@@ -3,8 +3,7 @@ package org.veritasopher.encoder;
 import org.veritasopher.element.AtomicProposition;
 import org.veritasopher.element.State;
 import org.veritasopher.element.Transition;
-import org.veritasopher.exception.Assert;
-import org.veritasopher.exception.SystemException;
+import org.veritasopher.logic.LTLFormula;
 import org.veritasopher.structure.KripkeStructure;
 import org.veritasopher.util.FileUtil;
 
@@ -19,6 +18,9 @@ import java.util.stream.IntStream;
  */
 public class NaiveEncoder {
 
+    /**
+     * Structure to be encoded
+     */
     private final KripkeStructure kripkeStructure;
 
     /**
@@ -33,6 +35,9 @@ public class NaiveEncoder {
      */
     private final Map<State, EncodedState> stateMap;
 
+    /**
+     * Encode the Kripke structure in the constructor
+     */
     public NaiveEncoder(KripkeStructure kripkeStructure) {
         this.apMap = new HashMap<>();
         this.stateMap = new HashMap<>();
@@ -43,9 +48,6 @@ public class NaiveEncoder {
         encodeState();
     }
 
-    /**
-     * Encode the Kripke structure in the constructor
-     */
     public String generateSMT() {
         String template = FileUtil.readFromFileInResource("templates/SMTTemplate");
 

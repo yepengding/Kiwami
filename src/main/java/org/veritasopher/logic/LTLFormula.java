@@ -13,43 +13,43 @@ import static org.veritasopher.logic.FormulaType.*;
  * @param right right formula operand
  * @param prop  atomic proposition
  */
-public record Formula(
+public record LTLFormula(
         FormulaType type,
-        Formula left,
-        Formula right,
+        LTLFormula left,
+        LTLFormula right,
         AtomicProposition prop
 ) {
 
-    public static Formula True() {
-        return new Formula(TRUE, null, null, null);
+    public static LTLFormula True() {
+        return new LTLFormula(TRUE, null, null, null);
     }
 
-    public static Formula Prop(AtomicProposition proposition) {
-        return new Formula(PROP, null, null, proposition);
+    public static LTLFormula Prop(AtomicProposition proposition) {
+        return new LTLFormula(PROP, null, null, proposition);
     }
 
-    public static Formula Not(Formula right) {
-        return new Formula(NOT, null, right, null);
+    public static LTLFormula Not(LTLFormula right) {
+        return new LTLFormula(NOT, null, right, null);
     }
 
-    public static Formula And(Formula left, Formula right) {
-        return new Formula(AND, left, right, null);
+    public static LTLFormula And(LTLFormula left, LTLFormula right) {
+        return new LTLFormula(AND, left, right, null);
     }
 
-    public static Formula Imply(Formula left, Formula right) {
-        return new Formula(IMPLY, left, right, null);
+    public static LTLFormula Imply(LTLFormula left, LTLFormula right) {
+        return new LTLFormula(IMPLY, left, right, null);
     }
 
-    public static Formula Or(Formula left, Formula right) {
-        return new Formula(OR, left, right, null);
+    public static LTLFormula Or(LTLFormula left, LTLFormula right) {
+        return new LTLFormula(OR, left, right, null);
     }
 
-    public static Formula Finally(Formula right) {
-        return new Formula(FINALLY, null, right, null);
+    public static LTLFormula Finally(LTLFormula right) {
+        return new LTLFormula(FINALLY, null, right, null);
     }
 
-    public static Formula Globally(Formula right) {
-        return new Formula(GLOBALLY, null, right, null);
+    public static LTLFormula Globally(LTLFormula right) {
+        return new LTLFormula(GLOBALLY, null, right, null);
     }
 
     /**
@@ -84,9 +84,7 @@ public record Formula(
             case FINALLY -> {
                 return "%c(%s)".formatted(FINALLY.getValue(), this.right);
             }
-            default -> {
-                throw new SystemException("Unsupported formula type.");
-            }
+            default -> throw new SystemException("Unsupported formula type.");
         }
     }
 }

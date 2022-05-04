@@ -4,10 +4,12 @@ A generic bounded model checker.
 
 ## Feature
 
-- [x] Encode Kripke structure
 - [x] Structure checking
 - [x] Termination / Maximal step calculation
+- [x] In-memory structure construction
+- [x] On-disk structure construction
 - [ ] Structure minimization
+- [x] Encode Kripke structure
 - [ ] Generate SMT-LIB programs
 - [ ] LTL model checking
 - [ ] CTL model checking
