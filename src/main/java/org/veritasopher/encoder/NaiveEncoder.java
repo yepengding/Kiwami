@@ -56,13 +56,14 @@ public class NaiveEncoder {
     public String generateSMTWithBound(int k) {
         String template = FileUtil.readFromFileInResource("templates/SMTTemplate");
 
-        String transitionConstraints = generateTransitionConstraints();
+        String smtProgram = template.formatted(
+                generateTransitionConstraints(),
+                generateInitStateAssertion(),
+                generateTransitionAssertions(k),
+                generateGetValueStatements(k)
+        );
 
-        String initStateAssertion = generateInitStateAssertion();
-
-        String transitionAssertion = generateTransitionAssertions(k);
-
-        return transitionAssertion;
+        return smtProgram;
     }
 
     /**
@@ -134,6 +135,22 @@ public class NaiveEncoder {
     }
 
     /**
+     * Generate get-value statements
+     *
+     * @param k bound
+     * @return get-value statements
+     */
+    private String generateGetValueStatements(int k) {
+        return IntStream.range(0, k + 1)
+                .mapToObj(i -> "(get-value (%s)".formatted(
+                        IntStream.range(0, this.apMap.size())
+                                .mapToObj(j -> "(s %d %d)".formatted(i, j))
+                                .collect(Collectors.joining(" "))
+                ))
+                .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    /**
      * Encode atomic proposition: atomic proposition -> index
      */
     private void encodeAtomicProposition() {
@@ -193,6 +210,13 @@ public class NaiveEncoder {
             String unindexedConstraint
     ) {
 
+        /**
+         * Encoded state constraint with index.
+         * E.g., (s index *)
+         *
+         * @param index state index
+         * @return indexed state constraint
+         */
         public String constraint(String index) {
             String[] indices = new String[this.code.length];
             Arrays.fill(indices, index);
